@@ -13,3 +13,4 @@ gitleaks-report.json
 # Entorno y claves
 .env
 *.key
+django-DefectDojo/
