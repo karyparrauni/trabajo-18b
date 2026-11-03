@@ -1,1 +1,15 @@
-threagile/
+# Python & Pytest
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Artefactos y reportes temporales
+*.tar
+manifests-rendered-prod.yaml
+reports-json/
+*-results.json
+gitleaks-report.json
+
+# Entorno y claves
+.env
+*.key
