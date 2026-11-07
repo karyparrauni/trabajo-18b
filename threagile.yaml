@@ -11,59 +11,45 @@ threagile_version: 1.0.0
 # You might also want to try the REST API when running in server mode...
 
 
-# This is only a stub for simple quick editing and is not complete.
-# For a complete usable example model see the "-create-example-model" option.
+title: TP18 - Modelo de Amenazas DevSecOps
 
-
-title: Model Stub
-
-date: 2020-03-31
+date: 2026-11-07
 
 author:
-  name: John Doe
-  homepage: www.example.com
-
-
+  name: DevSecOps TP18
+  homepage: https://github.com/karyparrauni/trabajo-18b
 
 
 management_summary_comment: >
-  Just some <b>more</b> custom summary possible here...
+  Modelo de amenazas de la plataforma DevSecOps TP18,
+  integrado al pipeline CI/CD y utilizado para generar
+  resultados de seguridad que posteriormente se importan en DefectDojo.
 
-business_criticality: important # values: archive, operational, important, critical, mission-critical
-
-
+business_criticality: important
 
 
 business_overview:
-  description: Some more <i>demo text</i> here and even images...
+  description: >
+    Plataforma DevSecOps compuesta por la aplicación Notes,
+    componentes de monitoreo y servicios desplegados en Kubernetes.
   images:
-#    - custom-image-1.png: Some dummy image 1
-#    - custom-image-2.png: Some dummy image 2
 
 
 technical_overview:
-  description: Some more <i>demo text</i> here and even images...
+  description: >
+    Arquitectura compuesta por cliente web, Nginx, backend Flask/Gunicorn,
+    PostgreSQL y componentes de monitoreo como Prometheus, Grafana,
+    Node Exporter y cAdvisor.
   images:
-#    - custom-image-1.png: Some dummy image 1
-#    - custom-image-2.png: Some dummy image 2
 
 
-
-questions: # simply use "" as answer to signal "unanswered"
-  Some question without an answer?: ""
-  Some question with an answer?: >
-    Some answer
-
+questions:
 
 
 abuse_cases:
-  Some Abuse Case: >
-    Some Description
 
 
 security_requirements:
-  Some Security Requirement: Some Description
-
 
 
 # Tags can be used for anything, it's just a tag. Also risk rules can act based on tags if you like.
@@ -89,28 +75,11 @@ tags_available:
   - ocp
   - openshift
   - tomcat
-  - some-tag
-  - some-other-tag
 
 
 
 
 data_assets:
-
-  Some Data Asset:
-    id: some-data
-    description: Some Description
-    usage: business # values: business, devops
-    tags:
-    origin: Some Origin
-    owner: Some Owner
-    quantity: many # values: very-few, few, many, very-many
-    confidentiality: confidential # values: public, internal, restricted, confidential, strictly-confidential
-    integrity: critical # values: archive, operational, important, critical, mission-critical
-    availability: operational # values: archive, operational, important, critical, mission-critical
-    justification_cia_rating: Some Justification
-
-
 
 technical_assets:
   cliente-web:
@@ -293,39 +262,6 @@ technical_assets:
     confidentiality: internal
     integrity: operational
     availability: operational
-
-
-
-  Some Other Technical Asset:
-    id: some-other-component
-    description: Some Description
-    type: process # values: external-entity, process, datastore
-    usage: business # values: business, devops
-    used_as_client_by_human: false
-    out_of_scope: false
-    justification_out_of_scope:
-    size: component # values: system, service, application, component
-    technology: web-service-rest # values: see help
-    tags:
-      - some-tag
-      - some-other-tag
-    internet: false
-    machine: virtual # values: physical, virtual, container, serverless
-    encryption: none # values: none, transparent, data-with-symmetric-shared-key, data-with-asymmetric-shared-key, data-with-enduser-individual-key
-    owner: Some Owner
-    confidentiality: confidential # values: public, internal, restricted, confidential, strictly-confidential
-    integrity: critical # values: archive, operational, important, critical, mission-critical
-    availability: critical # values: archive, operational, important, critical, mission-critical
-    justification_cia_rating: Some Justification
-    multi_tenant: false
-    redundant: false
-    custom_developed_parts: true
-    data_assets_processed: # sequence of IDs to reference
-      - some-data
-    data_assets_stored: # sequence of IDs to reference
-    data_formats_accepted: # sequence of formats like: json, xml, serialization, file, csv
-      - xml
-    communication_links:
 
 
 
