@@ -85,8 +85,26 @@ jobs:
         uses: threagile/run-threagile-action@v1
         with:
           model-file: 'threagile.yaml'
-          output-dir: 'reports-json'
         continue-on-error: true
+
+      - name: Preparar reporte Threagile para DefectDojo
+        if: always()
+        run: |
+          echo "=== Archivos generados por Threagile ==="
+          find threagile/output -maxdepth 2 -type f -printf '%p\n' | sort || true
+
+          echo "=== Preparando reports-json ==="
+          mkdir -p reports-json
+
+          THREAGILE_JSON=$(find threagile/output -maxdepth 1 -type f -iname '*risk*.json' | head -n 1)
+
+          if [ -n "$THREAGILE_JSON" ]; then
+            cp "$THREAGILE_JSON" reports-json/threagile-results.json
+            echo "[OK] Reporte Threagile: $THREAGILE_JSON"
+            echo "[OK] Copiado como reports-json/threagile-results.json"
+          else
+            echo "[WARN] No se encontró ningún JSON de Threagile"
+          fi
 
       # =========================================================================
       # 2B. SEMGREP SAST (TP15)
