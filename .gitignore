@@ -14,3 +14,4 @@ gitleaks-report.json
 .env
 *.key
 django-DefectDojo/
+values-local.yaml
