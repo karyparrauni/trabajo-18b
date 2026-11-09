@@ -172,9 +172,16 @@ jobs:
           upload_scan() {
             local SCAN_TYPE="$1"
             local FILE_PATH="$2"
+
             if [ -f "$FILE_PATH" ]; then
               echo "  [+] Enviando $SCAN_TYPE ($FILE_PATH)..."
-              RESPONSE=$(curl -s -X POST "$DEFECTDOJO_URL/api/v2/import-scan/" \
+
+              RESPONSE_FILE=$(mktemp)
+
+              HTTP_CODE=$(curl -sS \
+                -o "$RESPONSE_FILE" \
+                -w "%{http_code}" \
+                -X POST "$DEFECTDOJO_URL/api/v2/import-scan/" \
                 -H "Authorization: Token $DEFECTDOJO_TOKEN" \
                 -H "ngrok-skip-browser-warning: true" \
                 -F "product_name=$PRODUCT_NAME" \
@@ -183,20 +190,27 @@ jobs:
                 -F "auto_create_context=true" \
                 -F "file=@$FILE_PATH")
 
-              if echo "$RESPONSE" | grep -q "scan_type"; then
-                echo "      [OK] Importación exitosa"
+              RESPONSE=$(cat "$RESPONSE_FILE")
+              rm -f "$RESPONSE_FILE"
+
+              if [ "$HTTP_CODE" -ge 200 ] && [ "$HTTP_CODE" -lt 300 ]; then
+                echo "      [OK] Importación exitosa (HTTP $HTTP_CODE)"
+                echo "      Respuesta: $RESPONSE"
               else
-                echo "      [FAIL] Respuesta API: $RESPONSE"
+                echo "      [FAIL] Importación rechazada (HTTP $HTTP_CODE)"
+                echo "      Respuesta: $RESPONSE"
+                return 1
               fi
             else
-              echo "  [WARN] Archivo $FILE_PATH no encontrado, omitiendo..."
+              echo "  [FAIL] Archivo $FILE_PATH no encontrado"
+              return 1
             fi
           }
 
           # -------------------------------------------------------------
           # Importación de Threagile Threat Model (TP14)
           # -------------------------------------------------------------
-          upload_scan "Generic CI/CD Audit" "reports-json/threagile-results.json"
+          upload_scan "Threagile risks report" "reports-json/threagile-results.json"
 
           # -------------------------------------------------------------
           # Importación de Semgrep JSON (TP15)
