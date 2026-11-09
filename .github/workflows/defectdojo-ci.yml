@@ -157,47 +157,47 @@ jobs:
           name: security-json-reports
           path: reports-json
 
-      # -------------------------------------------------------------
       # Importación de Reportes a la API v2 de DefectDojo vía cURL
       # -------------------------------------------------------------
-      - name: Importar Reportes JSON a DefectDojo API v2
+      - name: Reimportar Reportes JSON a DefectDojo API v2
         env:
           DEFECTDOJO_URL: ${{ secrets.DEFECTDOJO_URL }}
           DEFECTDOJO_TOKEN: ${{ secrets.DEFECTDOJO_API_KEY }}
           PRODUCT_NAME: "Notes App"
           ENGAGEMENT_NAME: "CI/CD Automated Security Audits"
         run: |
-          echo "=== Enviando auditorías a DefectDojo API v2 ==="
+          echo "=== Reimportando auditorías a DefectDojo API v2 ==="
 
           upload_scan() {
             local SCAN_TYPE="$1"
             local FILE_PATH="$2"
 
             if [ -f "$FILE_PATH" ]; then
-              echo "  [+] Enviando $SCAN_TYPE ($FILE_PATH)..."
+              echo "  [+] Reimportando $SCAN_TYPE ($FILE_PATH)..."
 
               RESPONSE_FILE=$(mktemp)
 
               HTTP_CODE=$(curl -sS \
                 -o "$RESPONSE_FILE" \
                 -w "%{http_code}" \
-                -X POST "$DEFECTDOJO_URL/api/v2/import-scan/" \
+                -X POST "$DEFECTDOJO_URL/api/v2/reimport-scan/" \
                 -H "Authorization: Token $DEFECTDOJO_TOKEN" \
                 -H "ngrok-skip-browser-warning: true" \
                 -F "product_name=$PRODUCT_NAME" \
                 -F "engagement_name=$ENGAGEMENT_NAME" \
                 -F "scan_type=$SCAN_TYPE" \
                 -F "auto_create_context=true" \
+                -F "close_old_findings=true" \
                 -F "file=@$FILE_PATH")
 
               RESPONSE=$(cat "$RESPONSE_FILE")
               rm -f "$RESPONSE_FILE"
 
               if [ "$HTTP_CODE" -ge 200 ] && [ "$HTTP_CODE" -lt 300 ]; then
-                echo "      [OK] Importación exitosa (HTTP $HTTP_CODE)"
+                echo "      [OK] Reimportación exitosa (HTTP $HTTP_CODE)"
                 echo "      Respuesta: $RESPONSE"
               else
-                echo "      [FAIL] Importación rechazada (HTTP $HTTP_CODE)"
+                echo "      [FAIL] Reimportación rechazada (HTTP $HTTP_CODE)"
                 echo "      Respuesta: $RESPONSE"
                 return 1
               fi
@@ -208,24 +208,32 @@ jobs:
           }
 
           # -------------------------------------------------------------
-          # Importación de Threagile Threat Model (TP14)
+          # Threagile Threat Model (TP14)
           # -------------------------------------------------------------
-          upload_scan "Threagile risks report" "reports-json/threagile-results.json"
+          upload_scan \
+            "Threagile risks report" \
+            "reports-json/threagile-results.json"
 
           # -------------------------------------------------------------
-          # Importación de Semgrep JSON (TP15)
+          # Semgrep JSON (TP15)
           # -------------------------------------------------------------
-          upload_scan "Semgrep JSON Report" "reports-json/semgrep-results.json"
+          upload_scan \
+            "Semgrep JSON Report" \
+            "reports-json/semgrep-results.json"
 
           # -------------------------------------------------------------
-          # Importación de Trivy JSON (TP16)
+          # Trivy JSON (TP16)
           # -------------------------------------------------------------
-          upload_scan "Trivy Scan" "reports-json/trivy-container-results.json"
+          upload_scan \
+            "Trivy Scan" \
+            "reports-json/trivy-container-results.json"
 
           # -------------------------------------------------------------
-          # Importación de Gitleaks JSON (TP17)
+          # Gitleaks JSON (TP17)
           # -------------------------------------------------------------
-          upload_scan "Gitleaks Scan" "reports-json/gitleaks-report.json"
+          upload_scan \
+            "Gitleaks Scan" \
+            "reports-json/gitleaks-report.json"
 
       # -------------------------------------------------------------
       # Resumen de Centralización en GitHub
