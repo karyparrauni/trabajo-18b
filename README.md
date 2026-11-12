@@ -100,5 +100,3 @@ Las credenciales se mantuvieron fuera del repositorio mediante GitHub Secrets, p
 ### Resultado
 
 TP18B permitió centralizar los resultados de seguridad de los trabajos anteriores en DefectDojo y automatizar su importación mediante GitHub Actions.
-
-Esta implementación sirvió como base para TP18D, donde el acceso a DefectDojo evolucionó hacia comunicación interna de Kubernetes mediante runners **self-hosted efímeros administrados por ARC**.
